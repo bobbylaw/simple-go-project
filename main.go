@@ -36,10 +36,26 @@ func registerTeams(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, groupRecord)
 }
 
+func resultPage(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		fmt.Fprintf(w, "ParseForm() err: %v", err)
+		return
+	}
+
+	utils.UpdateMatchResult(r.FormValue("result"), &teams, &groupRecord)
+	sortedGroup := utils.SortResult(&groupRecord)
+
+	t, err := template.ParseFiles("./static/finalresult.html")
+	if err != nil {
+		fmt.Println(err)
+	}
+	t.Execute(w, sortedGroup)
+}
+
 func main() {
 	http.HandleFunc("/", registrationPage)
 	http.HandleFunc("/register", registerTeams)
-	//http.HandleFunc("/result", resultPage)
+	http.HandleFunc("/result", resultPage)
 	fmt.Printf("Starting server at port 8080\n")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
