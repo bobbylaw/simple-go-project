@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="/static/main.css">
+        <title>
+            We are the Champions
+        </title>
+    </head>
+    <body class="center">
+        <h2>
+            Welcome to GovTech Annual Football Championship
+        </h2>
+        <h3>
+            To proceed, please register the teams below
+        </h3>
+        <h4>
+            Format: &lt;Team A name&gt; &lt;Team A registration date in DD/MM&gt; &lt;Team A group number&gt;  
+        </h4>
+        <h4>
+            Example: firstTeam 17/05 2
+        </h4>
+        <form method="POST" action="/register">
+            <p><label for="registration">Registration of Team Information:</label></p>
+            <textarea id="registration" name="registration" rows="15" cols="50"></textarea>
+            <br>
+            <br>
+            <input type="submit" value="Register">
+        </form>
+    </body>
+</html>
