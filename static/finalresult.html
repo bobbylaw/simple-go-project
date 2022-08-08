@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/static/main.css">
+    <title>
+        We are the Champions
+    </title>
+</head>
+<body>
+
+  <h2 class='center'>GovTech Annual Football Championship has ended</h2>
+
+  <div class="row">
+      {{ range . }}
+      <div class="column">
+          <table>
+              <tr>
+                <th>Team Name</th>
+                <th>Registration Date</th>
+                <th>Total Win</th>
+                <th>Total Lose</th>
+                <th>Total Draw</th>
+                <th>Total Goals</th>
+                <th>Total Score</th>
+              </tr>
+              {{ range . }}
+                  <tr>
+                  <td>{{ .Team.Name }}</td>
+                  <td>{{ .Team.RegistrationDate }}</td>
+                  <td>{{ .NumberOfWin }}</td>
+                  <td>{{ .NumberOfLose }}</td>
+                  <td>{{ .NumberOfDraw }}</td>
+                  <td>{{ .TotalGoal }}</td>
+                  <td>{{ .TotalScore }}</td>
+                  </tr>
+              {{ end }}
+            </table>
+      </div>
+      {{ end }}
+  </div>
+
+</body>
+</html>
+
