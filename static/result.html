@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/static/main.css/">
+    <title>
+        We are the Champions
+    </title>
+</head>
+<body>
+
+    <h2 class='center'>GovTech Annual Football Championship has started</h2>
+
+    <div class="row">
+        {{ range . }}
+        <div class="column">
+            <table>
+                <tr>
+                <th>Team Name</th>
+                <th>Registration Date</th>
+                <th>Total Win</th>
+                <th>Total Lose</th>
+                <th>Total Draw</th>
+                <th>Total Goals</th>
+                <th>Total Score</th>
+                </tr>
+                {{ range . }}
+                    <tr>
+                    <td>{{ .Team.Name }}</td>
+                    <td>{{ .Team.RegistrationDate }}</td>
+                    <td>{{ .NumberOfWin }}</td>
+                    <td>{{ .NumberOfLose }}</td>
+                    <td>{{ .NumberOfDraw }}</td>
+                    <td>{{ .TotalGoal }}</td>
+                    <td>{{ .TotalScore }}</td>
+                    </tr>
+                {{ end }}
+            </table>
+        </div>
+        {{ end }}
+    </div>
+
+    <div class='center'>
+        <form method="POST" action="/result">
+            <p>
+                <label for="result">Please Enter the Match Results</label>
+                <br>
+                <label for="result">Format: &lt;Team A name&gt; &lt;Team B name&gt; &lt;Team A goals scored&gt; &lt;Team B goals scored&gt;</label>
+                <br>
+                <label for="result">Example: firstTeam secondTeam 5 2</label>
+            </p>
+            <textarea id="result" name="result" rows="15" cols="50"></textarea>
+            <br>
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+</body>
+</html>
+
