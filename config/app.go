@@ -22,10 +22,10 @@ var RegisterDatabase = func() {
 var onCreate = func(database *sql.DB) {
 	statement1, _ := database.Prepare("CREATE TABLE IF NOT EXISTS team (id INTEGER PRIMARY KEY, team_name TEXT, registration_date TEXT)")
 	statement1.Exec()
-	statement2, _ := database.Prepare("CREATE TABLE IF NOT EXISTS group_record (id INTEGER PRIMARY KEY, team_id INTEGER, number_of_win INTEGER, number_of_lose INTEGER, number_of_draw INTEGER, total_goal INTEGER, total_score INTEGER, FOREIGN KEY (team_id) REFERENCES team(id))")
+	statement2, _ := database.Prepare("CREATE TABLE IF NOT EXISTS group_record (id INTEGER, team_id INTEGER, number_of_win INTEGER, number_of_lose INTEGER, number_of_draw INTEGER, total_goal INTEGER, total_score INTEGER, PRIMARY KEY (id, team_id), FOREIGN KEY (team_id) REFERENCES team(id))")
 	statement2.Exec()
 }
 
-func getDB() *sql.DB {
+func GetDB() *sql.DB {
 	return db
 }

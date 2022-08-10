@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"database/sql"
 	"fmt"
 	"simple-go-project/model"
 	"sort"
@@ -26,6 +27,18 @@ func CreateTeams(rawData string, output *map[string]model.Team) {
 			RegistrationDate: team[1],
 			GroupID:          ConvertToInt(strings.TrimSpace(team[2])),
 		}
+	}
+}
+
+func AddTeams(rawData string, database *sql.DB) {
+	teams := strings.Split(rawData, "\n")
+	//*output = make(map[string]model.Team)
+	for _, str := range teams {
+		team := strings.Split(str, " ")
+		model.AddTeam(database, model.Team{
+			Name:             team[0],
+			RegistrationDate: team[1],
+		})
 	}
 }
 

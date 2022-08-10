@@ -1,11 +1,5 @@
 package model
 
-type Team struct {
-	Name             string
-	RegistrationDate string
-	GroupID          int
-}
-
 type GroupRecord struct {
 	GroupID      int
 	Team         Team

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"simple-go-project/config"
 	"simple-go-project/model"
 	"simple-go-project/utils"
 )
@@ -25,8 +26,9 @@ func RegisterTeams(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.CreateTeams(r.FormValue("registration"), &Teams)
-	utils.CreateGroupRecord(r.FormValue("registration"), &GroupRecord)
+	//utils.CreateTeams(r.FormValue("registration"), &Teams)
+	//utils.CreateGroupRecord(r.FormValue("registration"), &GroupRecord)
+	utils.AddTeams(r.FormValue("registration"), config.GetDB())
 
 	t, err := template.ParseFiles("./static/result.html")
 	if err != nil {
