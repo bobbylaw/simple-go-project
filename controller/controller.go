@@ -21,12 +21,18 @@ func RegistrationPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func RegisterTeams(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
-		fmt.Fprintf(w, "ParseForm() err: %v", err)
-		return
+
+	switch r.Method {
+	case "GET":
+	case "POST":
+		if err := r.ParseForm(); err != nil {
+			fmt.Fprintf(w, "ParseForm() err: %v", err)
+			return
+		}
+
+		utils.Register(r.FormValue("registration"), config.GetDB())
 	}
 
-	utils.Register(r.FormValue("registration"), config.GetDB())
 	groups := utils.ConvertGroups(model.GetAllGroupRecord(config.GetDB()))
 	t, err := template.ParseFiles("./static/result.html")
 	if err != nil {
@@ -36,12 +42,18 @@ func RegisterTeams(w http.ResponseWriter, r *http.Request) {
 }
 
 func ResultPage(w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err != nil {
-		fmt.Fprintf(w, "ParseForm() err: %v", err)
-		return
+	switch r.Method {
+	case "GET":
+
+	case "POST":
+		if err := r.ParseForm(); err != nil {
+			fmt.Fprintf(w, "ParseForm() err: %v", err)
+			return
+		}
+
+		utils.UpdateMatchResult(r.FormValue("result"), config.GetDB())
 	}
 
-	utils.UpdateMatchResult(r.FormValue("result"), config.GetDB())
 	sortedGroup := utils.SortResult(utils.ConvertGroups(model.GetAllGroupRecord(config.GetDB())))
 
 	t, err := template.ParseFiles("./static/finalresult.html")
