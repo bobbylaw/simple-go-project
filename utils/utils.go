@@ -25,19 +25,40 @@ func CreateTeams(rawData string, output *map[string]model.Team) {
 		(*output)[team[0]] = model.Team{
 			Name:             team[0],
 			RegistrationDate: team[1],
-			GroupID:          ConvertToInt(strings.TrimSpace(team[2])),
+			//GroupID:          ConvertToInt(strings.TrimSpace(team[2])),
 		}
 	}
 }
 
 func AddTeams(rawData string, database *sql.DB) {
 	teams := strings.Split(rawData, "\n")
-	//*output = make(map[string]model.Team)
-	for _, str := range teams {
+	for index, str := range teams {
 		team := strings.Split(str, " ")
 		model.AddTeam(database, model.Team{
+			ID:               index + 1,
 			Name:             team[0],
 			RegistrationDate: team[1],
+		})
+	}
+}
+
+func AddGroupRecords(rawData string, database *sql.DB) {
+	teams := strings.Split(rawData, "\n")
+
+	for index, str := range teams {
+		team := strings.Split(str, " ")
+		groupID := ConvertToInt(strings.TrimSpace(team[2]))
+		model.AddGroupRecord(database, model.GroupRecord{
+			GroupID: groupID,
+			Team: model.Team{
+				ID:               index + 1,
+				Name:             team[0],
+				RegistrationDate: team[1],
+			},
+			NumberOfWin:  0,
+			NumberOfLose: 0,
+			TotalGoal:    0,
+			TotalScore:   0,
 		})
 	}
 }
@@ -67,42 +88,42 @@ func CreateGroupRecord(rawData string, output *map[int]map[string]model.GroupRec
 	}
 }
 
-func UpdateMatchResult(rawData string, teams *map[string]model.Team, records *map[int]map[string]model.GroupRecord) {
-	matches := strings.Split(rawData, "\n")
-	for _, str := range matches {
-		match := strings.Split(str, " ")
+// func UpdateMatchResult(rawData string, teams *map[string]model.Team, records *map[int]map[string]model.GroupRecord) {
+// 	matches := strings.Split(rawData, "\n")
+// 	for _, str := range matches {
+// 		match := strings.Split(str, " ")
 
-		firstTeamName := match[0]
-		secondTeamName := match[1]
-		firstTeamGoals := ConvertToInt(strings.TrimSpace(match[2]))
-		secondTeamGoals := ConvertToInt(strings.TrimSpace(match[3]))
-		firstTeamGroupID := (*teams)[firstTeamName].GroupID
-		secondTeamGroupID := (*teams)[secondTeamName].GroupID
+// 		firstTeamName := match[0]
+// 		secondTeamName := match[1]
+// 		firstTeamGoals := ConvertToInt(strings.TrimSpace(match[2]))
+// 		secondTeamGoals := ConvertToInt(strings.TrimSpace(match[3]))
+// 		firstTeamGroupID := (*teams)[firstTeamName].GroupID
+// 		secondTeamGroupID := (*teams)[secondTeamName].GroupID
 
-		firstTeamRecord := (*records)[firstTeamGroupID][firstTeamName]
-		secondTeamRecord := (*records)[secondTeamGroupID][secondTeamName]
-		firstTeamRecord.TotalGoal += firstTeamGoals
-		secondTeamRecord.TotalGoal += secondTeamGoals
+// 		firstTeamRecord := (*records)[firstTeamGroupID][firstTeamName]
+// 		secondTeamRecord := (*records)[secondTeamGroupID][secondTeamName]
+// 		firstTeamRecord.TotalGoal += firstTeamGoals
+// 		secondTeamRecord.TotalGoal += secondTeamGoals
 
-		if secondTeamGoals > firstTeamGoals {
-			secondTeamRecord.NumberOfWin++
-			secondTeamRecord.TotalScore += 3
-			firstTeamRecord.NumberOfLose++
-		} else if firstTeamGoals > secondTeamGoals {
-			firstTeamRecord.NumberOfWin++
-			firstTeamRecord.TotalScore += 3
-			secondTeamRecord.NumberOfLose++
-		} else {
-			firstTeamRecord.NumberOfDraw++
-			secondTeamRecord.NumberOfDraw++
-			firstTeamRecord.TotalScore += 1
-			secondTeamRecord.TotalScore += 1
-		}
+// 		if secondTeamGoals > firstTeamGoals {
+// 			secondTeamRecord.NumberOfWin++
+// 			secondTeamRecord.TotalScore += 3
+// 			firstTeamRecord.NumberOfLose++
+// 		} else if firstTeamGoals > secondTeamGoals {
+// 			firstTeamRecord.NumberOfWin++
+// 			firstTeamRecord.TotalScore += 3
+// 			secondTeamRecord.NumberOfLose++
+// 		} else {
+// 			firstTeamRecord.NumberOfDraw++
+// 			secondTeamRecord.NumberOfDraw++
+// 			firstTeamRecord.TotalScore += 1
+// 			secondTeamRecord.TotalScore += 1
+// 		}
 
-		(*records)[firstTeamGroupID][firstTeamName] = firstTeamRecord
-		(*records)[secondTeamGroupID][secondTeamName] = secondTeamRecord
-	}
-}
+// 		(*records)[firstTeamGroupID][firstTeamName] = firstTeamRecord
+// 		(*records)[secondTeamGroupID][secondTeamName] = secondTeamRecord
+// 	}
+// }
 
 func SortResult(records *map[int]map[string]model.GroupRecord) [][]model.GroupRecord {
 	totalGroup := make([][]model.GroupRecord, 0, len(*records))

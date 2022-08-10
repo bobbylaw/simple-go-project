@@ -29,6 +29,7 @@ func RegisterTeams(w http.ResponseWriter, r *http.Request) {
 	//utils.CreateTeams(r.FormValue("registration"), &Teams)
 	//utils.CreateGroupRecord(r.FormValue("registration"), &GroupRecord)
 	utils.AddTeams(r.FormValue("registration"), config.GetDB())
+	utils.AddGroupRecords(r.FormValue("registration"), config.GetDB())
 
 	t, err := template.ParseFiles("./static/result.html")
 	if err != nil {
@@ -43,7 +44,7 @@ func ResultPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.UpdateMatchResult(r.FormValue("result"), &Teams, &GroupRecord)
+	//utils.UpdateMatchResult(r.FormValue("result"), &Teams, &GroupRecord)
 	sortedGroup := utils.SortResult(&GroupRecord)
 
 	t, err := template.ParseFiles("./static/finalresult.html")
