@@ -28,13 +28,14 @@ func RegisterTeams(w http.ResponseWriter, r *http.Request) {
 
 	//utils.CreateTeams(r.FormValue("registration"), &Teams)
 	//utils.CreateGroupRecord(r.FormValue("registration"), &GroupRecord)
-	utils.RegisterTeam(r.FormValue("registration"), config.GetDB())
+	utils.Register(r.FormValue("registration"), config.GetDB())
 
+	groups := model.GetGroupRecord(config.GetDB())
 	t, err := template.ParseFiles("./static/result.html")
 	if err != nil {
 		fmt.Println(err)
 	}
-	t.Execute(w, GroupRecord)
+	t.Execute(w, groups)
 }
 
 func ResultPage(w http.ResponseWriter, r *http.Request) {
