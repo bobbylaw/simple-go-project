@@ -15,10 +15,6 @@ td, th {
   font-size: 12px;
 }
 
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-
 .row {
   margin-left:-5px;
   margin-right:-5px;

@@ -1,5 +1,18 @@
 <!DOCTYPE html>
 <html>
+<style>
+  tr:nth-child(-n+5) {
+    background-color:greenyellow;
+  }
+
+  tr:nth-last-child(-n+2) {
+    background-color:red;
+  }
+
+  tr:nth-child(1) {
+    background-color: #dddddd !important;
+  }
+</style>
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="/static/main.css">
@@ -9,8 +22,8 @@
 </head>
 <body>
 
-  <h2 class='center'>GovTech Annual Football Championship has ended</h2>
-
+  <h2 class='center'>GovTech Annual Football Championship in progress</h2>
+  <h3 class='center'>Congratulations to the teams that advances to the next round</h3>
   <div class="row">
       {{ range . }}
       <div class="column">
