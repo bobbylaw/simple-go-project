@@ -55,6 +55,19 @@ func Register(rawData string, database *sql.DB) {
 	}
 }
 
+func ConvertGroups(groups []model.GroupRecord) map[int]map[int]model.GroupRecord {
+	output := make(map[int]map[int]model.GroupRecord)
+	for _, val := range groups {
+		if output[val.GroupID] == nil {
+			output[val.GroupID] = make(map[int]model.GroupRecord)
+		}
+
+		output[val.GroupID][val.Team.ID] = val
+	}
+
+	return output
+}
+
 // func CreateGroupRecord(rawData string, output *map[int]map[string]model.GroupRecord) {
 // 	teams := strings.Split(rawData, "\n")
 // 	*output = make(map[int]map[string]model.GroupRecord)
@@ -117,14 +130,50 @@ func Register(rawData string, database *sql.DB) {
 // 	}
 // }
 
-func SortResult(records *map[int]map[string]model.GroupRecord) [][]model.GroupRecord {
-	totalGroup := make([][]model.GroupRecord, 0, len(*records))
+func UpdateMatchResult(rawData string, database *sql.DB) {
+	matches := strings.Split(rawData, "\n")
+	for _, str := range matches {
+		match := strings.Split(str, " ")
 
-	for groupID := range *records {
-		currGroup := make([]model.GroupRecord, 0, len((*records)[groupID]))
+		firstTeamName := match[0]
+		secondTeamName := match[1]
+		firstTeamGoals := ConvertToInt(strings.TrimSpace(match[2]))
+		secondTeamGoals := ConvertToInt(strings.TrimSpace(match[3]))
 
-		for team := range (*records)[groupID] {
-			currGroup = append(currGroup, (*records)[groupID][team])
+		firstTeamRecord := model.GetGroupRecord(database, firstTeamName)
+		secondTeamRecord := model.GetGroupRecord(database, secondTeamName)
+
+		firstTeamRecord.TotalGoal += firstTeamGoals
+		secondTeamRecord.TotalGoal += secondTeamGoals
+
+		if secondTeamGoals > firstTeamGoals {
+			secondTeamRecord.NumberOfWin++
+			secondTeamRecord.TotalScore += 3
+			firstTeamRecord.NumberOfLose++
+		} else if firstTeamGoals > secondTeamGoals {
+			firstTeamRecord.NumberOfWin++
+			firstTeamRecord.TotalScore += 3
+			secondTeamRecord.NumberOfLose++
+		} else {
+			firstTeamRecord.NumberOfDraw++
+			secondTeamRecord.NumberOfDraw++
+			firstTeamRecord.TotalScore += 1
+			secondTeamRecord.TotalScore += 1
+		}
+
+		model.UpdateGroupRecord(database, firstTeamRecord)
+		model.UpdateGroupRecord(database, secondTeamRecord)
+	}
+}
+
+func SortResult(records map[int]map[int]model.GroupRecord) [][]model.GroupRecord {
+	totalGroup := make([][]model.GroupRecord, 0, len(records))
+
+	for groupID := range records {
+		currGroup := make([]model.GroupRecord, 0, len((records)[groupID]))
+
+		for team := range (records)[groupID] {
+			currGroup = append(currGroup, (records)[groupID][team])
 		}
 
 		sort.SliceStable(currGroup, func(i, j int) bool {

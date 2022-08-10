@@ -20,7 +20,7 @@ func AddGroupRecord(database *sql.DB, groupRecord GroupRecord) {
 	statement.Exec(groupRecord.GroupID, groupRecord.Team.ID, groupRecord.NumberOfWin, groupRecord.NumberOfLose, groupRecord.NumberOfDraw, groupRecord.TotalGoal, groupRecord.TotalScore)
 }
 
-func GetGroupRecord(database *sql.DB) []GroupRecord {
+func GetAllGroupRecord(database *sql.DB) []GroupRecord {
 	rows, err := database.Query("SELECT g.id, t.id, t.team_name, t.registration_date, g.number_of_win, g.number_of_lose, g.number_of_draw, g.total_goal, g.total_score FROM group_record as g join team as t on g.team_id = t.id")
 
 	err = rows.Err()
@@ -49,4 +49,46 @@ func GetGroupRecord(database *sql.DB) []GroupRecord {
 	}
 
 	return groups
+}
+
+func GetGroupRecord(database *sql.DB, teamName string) GroupRecord {
+	rows, err := database.Query("SELECT g.id, t.id, t.team_name, t.registration_date, g.number_of_win, g.number_of_lose, g.number_of_draw, g.total_goal, g.total_score FROM group_record as g join team as t on g.team_id = t.id WHERE t.team_name = '" + teamName + "'")
+
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	group := GroupRecord{}
+
+	for rows.Next() {
+		rows.Scan(&group.GroupID, &group.Team.ID, &group.Team.Name, &group.Team.RegistrationDate, &group.NumberOfWin, &group.NumberOfLose, &group.NumberOfDraw, &group.TotalGoal, &group.TotalScore)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return group
+}
+
+func UpdateGroupRecord(database *sql.DB, group GroupRecord) int64 {
+	statement, err := database.Prepare("UPDATE group_record set number_of_win = ?, number_of_lose = ?, number_of_draw = ?, total_goal = ?, total_score = ? where team_id = ?")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	res, err := statement.Exec(group.NumberOfWin, group.NumberOfLose, group.NumberOfDraw, group.TotalGoal, group.TotalScore, group.Team.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	affected, err := res.RowsAffected()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return affected
 }

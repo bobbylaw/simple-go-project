@@ -26,11 +26,8 @@ func RegisterTeams(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//utils.CreateTeams(r.FormValue("registration"), &Teams)
-	//utils.CreateGroupRecord(r.FormValue("registration"), &GroupRecord)
 	utils.Register(r.FormValue("registration"), config.GetDB())
-
-	groups := model.GetGroupRecord(config.GetDB())
+	groups := utils.ConvertGroups(model.GetAllGroupRecord(config.GetDB()))
 	t, err := template.ParseFiles("./static/result.html")
 	if err != nil {
 		fmt.Println(err)
@@ -44,8 +41,8 @@ func ResultPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//utils.UpdateMatchResult(r.FormValue("result"), &Teams, &GroupRecord)
-	sortedGroup := utils.SortResult(&GroupRecord)
+	utils.UpdateMatchResult(r.FormValue("result"), config.GetDB())
+	sortedGroup := utils.SortResult(utils.ConvertGroups(model.GetAllGroupRecord(config.GetDB())))
 
 	t, err := template.ParseFiles("./static/finalresult.html")
 	if err != nil {
