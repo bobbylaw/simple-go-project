@@ -1,0 +1,31 @@
+package config
+
+import (
+	"database/sql"
+	"log"
+
+	_ "github.com/mattn/go-sqlite3"
+)
+
+var db *sql.DB
+
+var RegisterDatabase = func() {
+	database, err := sql.Open("sqlite3", "./database/database.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	onCreate(database)
+	db = database
+}
+
+var onCreate = func(database *sql.DB) {
+	statement1, _ := database.Prepare("CREATE TABLE IF NOT EXISTS team (id INTEGER PRIMARY KEY, team_name TEXT, registration_date TEXT)")
+	statement1.Exec()
+	statement2, _ := database.Prepare("CREATE TABLE IF NOT EXISTS group_record (id INTEGER PRIMARY KEY, team_id INTEGER, number_of_win INTEGER, number_of_lose INTEGER, number_of_draw INTEGER, total_goal INTEGER, total_score INTEGER, FOREIGN KEY (team_id) REFERENCES team(id))")
+	statement2.Exec()
+}
+
+func getDB() *sql.DB {
+	return db
+}

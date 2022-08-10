@@ -4,8 +4,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"simple-go-project/config"
 	"simple-go-project/routes"
 )
+
+func init() {
+	config.RegisterDatabase()
+}
 
 func main() {
 	routes.RegisterApplicationRoutes()
