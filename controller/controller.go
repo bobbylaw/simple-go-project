@@ -14,7 +14,7 @@ func RegistrationPage(w http.ResponseWriter, r *http.Request) {
 	if p == "./" {
 		p = "./static/index.html"
 	}
-	http.ServeFile(w, r, p)
+	http.ServeFile(w, r, "./static/index.html")
 }
 
 func RegisterTeams(w http.ResponseWriter, r *http.Request) {
@@ -57,4 +57,9 @@ func ResultPage(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	t.Execute(w, sortedGroup)
+}
+
+func Restart(w http.ResponseWriter, r *http.Request) {
+	config.TruncateDatabase()
+	http.Redirect(w, r, "./", http.StatusFound)
 }
