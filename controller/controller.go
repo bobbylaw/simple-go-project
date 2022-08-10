@@ -14,7 +14,7 @@ func RegistrationPage(w http.ResponseWriter, r *http.Request) {
 	if p == "./" {
 		p = "./static/index.html"
 	}
-	http.ServeFile(w, r, "./static/index.html")
+	http.ServeFile(w, r, p)
 }
 
 func RegisterTeams(w http.ResponseWriter, r *http.Request) {
