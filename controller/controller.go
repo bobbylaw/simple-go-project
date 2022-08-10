@@ -9,9 +9,6 @@ import (
 	"simple-go-project/utils"
 )
 
-var Teams map[string]model.Team
-var GroupRecord map[int]map[string]model.GroupRecord
-
 func RegistrationPage(w http.ResponseWriter, r *http.Request) {
 	p := "." + r.URL.Path
 	if p == "./" {
@@ -21,7 +18,6 @@ func RegistrationPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func RegisterTeams(w http.ResponseWriter, r *http.Request) {
-
 	switch r.Method {
 	case "GET":
 	case "POST":

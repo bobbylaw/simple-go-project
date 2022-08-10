@@ -17,19 +17,6 @@ func ConvertToInt(num string) int {
 	return res
 }
 
-// func CreateTeams(rawData string, output *map[string]model.Team) {
-// 	teams := strings.Split(rawData, "\n")
-// 	*output = make(map[string]model.Team)
-// 	for _, str := range teams {
-// 		team := strings.Split(str, " ")
-// 		(*output)[team[0]] = model.Team{
-// 			Name:             team[0],
-// 			RegistrationDate: team[1],
-// 			//GroupID:          ConvertToInt(strings.TrimSpace(team[2])),
-// 		}
-// 	}
-// }
-
 func Register(rawData string, database *sql.DB) {
 	teams := strings.Split(rawData, "\n")
 	for index, str := range teams {
@@ -67,68 +54,6 @@ func ConvertGroups(groups []model.GroupRecord) map[int]map[int]model.GroupRecord
 
 	return output
 }
-
-// func CreateGroupRecord(rawData string, output *map[int]map[string]model.GroupRecord) {
-// 	teams := strings.Split(rawData, "\n")
-// 	*output = make(map[int]map[string]model.GroupRecord)
-
-// 	for _, str := range teams {
-// 		team := strings.Split(str, " ")
-// 		groupID := ConvertToInt(strings.TrimSpace(team[2]))
-// 		if (*output)[groupID] == nil {
-// 			(*output)[groupID] = make(map[string]model.GroupRecord)
-// 		}
-
-// 		(*output)[groupID][team[0]] = model.GroupRecord{
-// 			GroupID: groupID,
-// 			Team: model.Team{
-// 				Name:             team[0],
-// 				RegistrationDate: team[1],
-// 			},
-// 			NumberOfWin:  0,
-// 			NumberOfLose: 0,
-// 			TotalGoal:    0,
-// 			TotalScore:   0,
-// 		}
-// 	}
-// }
-
-// func UpdateMatchResult(rawData string, teams *map[string]model.Team, records *map[int]map[string]model.GroupRecord) {
-// 	matches := strings.Split(rawData, "\n")
-// 	for _, str := range matches {
-// 		match := strings.Split(str, " ")
-
-// 		firstTeamName := match[0]
-// 		secondTeamName := match[1]
-// 		firstTeamGoals := ConvertToInt(strings.TrimSpace(match[2]))
-// 		secondTeamGoals := ConvertToInt(strings.TrimSpace(match[3]))
-// 		firstTeamGroupID := (*teams)[firstTeamName].GroupID
-// 		secondTeamGroupID := (*teams)[secondTeamName].GroupID
-
-// 		firstTeamRecord := (*records)[firstTeamGroupID][firstTeamName]
-// 		secondTeamRecord := (*records)[secondTeamGroupID][secondTeamName]
-// 		firstTeamRecord.TotalGoal += firstTeamGoals
-// 		secondTeamRecord.TotalGoal += secondTeamGoals
-
-// 		if secondTeamGoals > firstTeamGoals {
-// 			secondTeamRecord.NumberOfWin++
-// 			secondTeamRecord.TotalScore += 3
-// 			firstTeamRecord.NumberOfLose++
-// 		} else if firstTeamGoals > secondTeamGoals {
-// 			firstTeamRecord.NumberOfWin++
-// 			firstTeamRecord.TotalScore += 3
-// 			secondTeamRecord.NumberOfLose++
-// 		} else {
-// 			firstTeamRecord.NumberOfDraw++
-// 			secondTeamRecord.NumberOfDraw++
-// 			firstTeamRecord.TotalScore += 1
-// 			secondTeamRecord.TotalScore += 1
-// 		}
-
-// 		(*records)[firstTeamGroupID][firstTeamName] = firstTeamRecord
-// 		(*records)[secondTeamGroupID][secondTeamName] = secondTeamRecord
-// 	}
-// }
 
 func UpdateMatchResult(rawData string, database *sql.DB) {
 	matches := strings.Split(rawData, "\n")
