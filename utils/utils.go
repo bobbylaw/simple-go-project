@@ -30,36 +30,28 @@ func CreateTeams(rawData string, output *map[string]model.Team) {
 	}
 }
 
-func AddTeams(rawData string, database *sql.DB) {
+func Register(rawData string, database *sql.DB) {
 	teams := strings.Split(rawData, "\n")
-	for index, str := range teams {
-		team := strings.Split(str, " ")
-		model.AddTeam(database, model.Team{
-			ID:               index + 1,
-			Name:             team[0],
-			RegistrationDate: team[1],
-		})
-	}
-}
-
-func AddGroupRecords(rawData string, database *sql.DB) {
-	teams := strings.Split(rawData, "\n")
-
 	for index, str := range teams {
 		team := strings.Split(str, " ")
 		groupID := ConvertToInt(strings.TrimSpace(team[2]))
-		model.AddGroupRecord(database, model.GroupRecord{
-			GroupID: groupID,
-			Team: model.Team{
-				ID:               index + 1,
-				Name:             team[0],
-				RegistrationDate: team[1],
-			},
+		newTeam := model.Team{
+			ID:               index + 1,
+			Name:             team[0],
+			RegistrationDate: team[1],
+		}
+
+		newGroupRecord := model.GroupRecord{
+			GroupID:      groupID,
+			Team:         newTeam,
 			NumberOfWin:  0,
 			NumberOfLose: 0,
 			TotalGoal:    0,
 			TotalScore:   0,
-		})
+		}
+
+		model.AddTeam(database, newTeam)
+		model.AddGroupRecord(database, newGroupRecord)
 	}
 }
 

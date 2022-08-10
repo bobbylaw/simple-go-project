@@ -28,8 +28,7 @@ func RegisterTeams(w http.ResponseWriter, r *http.Request) {
 
 	//utils.CreateTeams(r.FormValue("registration"), &Teams)
 	//utils.CreateGroupRecord(r.FormValue("registration"), &GroupRecord)
-	utils.AddTeams(r.FormValue("registration"), config.GetDB())
-	utils.AddGroupRecords(r.FormValue("registration"), config.GetDB())
+	utils.RegisterTeam(r.FormValue("registration"), config.GetDB())
 
 	t, err := template.ParseFiles("./static/result.html")
 	if err != nil {
