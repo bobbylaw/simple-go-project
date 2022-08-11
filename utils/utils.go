@@ -136,3 +136,24 @@ func SortResult(records map[int]map[int]model.GroupRecord) [][]model.GroupRecord
 	return totalGroup
 
 }
+
+func CheckIfTeamRegistered(database *sql.DB) bool {
+	teams := model.GetAllTeam(database)
+	return len(teams) != 0
+}
+
+func CheckIfMatchInputted(database *sql.DB) bool {
+	group := model.GetAllGroupRecord(database)
+
+	if len(group) == 0 {
+		return false
+	}
+
+	for _, val := range group {
+		if val.TotalScore != 0 {
+			return true
+		}
+	}
+
+	return false
+}

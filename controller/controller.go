@@ -12,9 +12,15 @@ import (
 func RegistrationPage(w http.ResponseWriter, r *http.Request) {
 	p := "." + r.URL.Path
 	if p == "./" {
-		p = "./static/index.html"
+		if utils.CheckIfMatchInputted(config.GetDB()) {
+			http.Redirect(w, r, "./result", http.StatusFound)
+		} else if utils.CheckIfTeamRegistered(config.GetDB()) {
+			http.Redirect(w, r, "./register", http.StatusFound)
+		} else {
+			p = "./static/index.html"
+			http.ServeFile(w, r, p)
+		}
 	}
-	http.ServeFile(w, r, p)
 }
 
 func RegisterTeams(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +46,6 @@ func RegisterTeams(w http.ResponseWriter, r *http.Request) {
 func ResultPage(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
-
 	case "POST":
 		if err := r.ParseForm(); err != nil {
 			fmt.Fprintf(w, "ParseForm() err: %v", err)

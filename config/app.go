@@ -2,7 +2,6 @@ package config
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -20,23 +19,36 @@ var RegisterDatabase = func() {
 	db = database
 }
 
-var onCreate = func(database *sql.DB) {
+func onCreate(database *sql.DB) {
 	statement1, _ := database.Prepare("CREATE TABLE IF NOT EXISTS team (id INTEGER PRIMARY KEY, team_name TEXT, registration_date TEXT)")
-	statement1.Exec()
+	_, err1 := statement1.Exec()
+
+	if err1 != nil {
+		log.Fatal(err1)
+	}
+
 	statement2, _ := database.Prepare("CREATE TABLE IF NOT EXISTS group_record (id INTEGER, team_id INTEGER, number_of_win INTEGER, number_of_lose INTEGER, number_of_draw INTEGER, total_goal INTEGER, total_score INTEGER, PRIMARY KEY (id, team_id), FOREIGN KEY (team_id) REFERENCES team(id))")
-	statement2.Exec()
+	_, err2 := statement2.Exec()
+
+	if err2 != nil {
+		log.Fatal(err2)
+	}
 }
 
 func TruncateDatabase() {
 	statement1, _ := db.Prepare("DELETE FROM team")
-	statement1.Exec()
+	_, err1 := statement1.Exec()
 
-	fmt.Println("Deleting Teams")
+	if err1 != nil {
+		log.Fatal(err1)
+	}
 
 	statement2, _ := db.Prepare("DELETE FROM group_record")
-	statement2.Exec()
+	_, err2 := statement2.Exec()
 
-	fmt.Println("Deleting Group Records")
+	if err2 != nil {
+		log.Fatal(err2)
+	}
 }
 
 func GetDB() *sql.DB {
